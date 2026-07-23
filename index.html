@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#10140f" />
+  <meta name="description" content="Catalyst is a mobile-first companion prototype for Alchemy Game." />
+  <title>Catalyst — Alchemy Companion</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">ALCHEMY GAME COMPANION</p>
+        <h1>Catalyst</h1>
+      </div>
+      <div class="status-pill" id="saveStatus" aria-live="polite">Local data ready</div>
+    </header>
+
+    <main>
+      <section class="view active" id="view-dashboard" data-view="dashboard">
+        <div class="hero-card">
+          <div>
+            <span class="section-kicker">Field Desk</span>
+            <h2>Plan brews without risking your game save.</h2>
+            <p>Catalyst keeps research, favorites, notes, and planned mixtures in its own local workspace.</p>
+          </div>
+          <button class="primary" data-go="lab">Open Combination Lab</button>
+        </div>
+
+        <div class="metric-grid" id="metricGrid"></div>
+
+        <section class="panel">
+          <div class="section-heading">
+            <div>
+              <span class="section-kicker">Research Pulse</span>
+              <h3>Recently tracked</h3>
+            </div>
+          </div>
+          <div class="activity-list" id="recentActivity"></div>
+        </section>
+
+        <section class="panel callout-panel">
+          <div>
+            <span class="section-kicker">Save Boundary</span>
+            <h3>One-way import only</h3>
+            <p>Imported discoveries are copied into Catalyst. This prototype never modifies or replaces the original Alchemy Game save.</p>
+          </div>
+          <button class="secondary" data-go="data">Manage Data</button>
+        </section>
+      </section>
+
+      <section class="view" id="view-codex" data-view="codex">
+        <div class="page-heading">
+          <div>
+            <span class="section-kicker">Ingredient Codex</span>
+            <h2>Research inventory</h2>
+          </div>
+          <span class="count-badge" id="codexCount"></span>
+        </div>
+
+        <div class="toolbar">
+          <label class="search-box">
+            <span>Search</span>
+            <input id="ingredientSearch" type="search" placeholder="Name, effect, trait…" autocomplete="off" />
+          </label>
+          <select id="rarityFilter" aria-label="Filter ingredients by rarity">
+            <option value="all">All rarities</option>
+            <option value="Common">Common</option>
+            <option value="Uncommon">Uncommon</option>
+            <option value="Rare">Rare</option>
+            <option value="Mythic">Mythic</option>
+          </select>
+          <select id="discoveryFilter" aria-label="Filter ingredients by discovery state">
+            <option value="all">All research</option>
+            <option value="discovered">Discovered</option>
+            <option value="unknown">Undiscovered</option>
+            <option value="pinned">Pinned</option>
+          </select>
+        </div>
+
+        <div class="card-grid" id="ingredientGrid"></div>
+      </section>
+
+      <section class="view" id="view-lab" data-view="lab">
+        <div class="page-heading">
+          <div>
+            <span class="section-kicker">Combination Lab</span>
+            <h2>Test a mixture</h2>
+          </div>
+          <button class="ghost" id="clearLab">Clear</button>
+        </div>
+
+        <section class="lab-layout">
+          <div class="panel ingredient-picker-panel">
+            <div class="section-heading">
+              <div>
+                <span class="section-kicker">Step 1</span>
+                <h3>Select up to three ingredients</h3>
+              </div>
+              <span class="count-badge" id="labSelectionCount">0 / 3</span>
+            </div>
+            <label class="search-box compact">
+              <span>Find ingredient</span>
+              <input id="labSearch" type="search" placeholder="Search the codex…" autocomplete="off" />
+            </label>
+            <div class="picker-list" id="labIngredientList"></div>
+          </div>
+
+          <div class="panel lab-result-panel">
+            <div class="section-heading">
+              <div>
+                <span class="section-kicker">Step 2</span>
+                <h3>Compatibility model</h3>
+              </div>
+            </div>
+            <div id="labResult" class="empty-state">
+              <div class="empty-orb">+</div>
+              <h4>Add at least two ingredients</h4>
+              <p>Catalyst will estimate shared effects, conflict risk, rarity, and value.</p>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="view" id="view-notebook" data-view="notebook">
+        <div class="page-heading">
+          <div>
+            <span class="section-kicker">Recipe Notebook</span>
+            <h2>Saved formulas</h2>
+          </div>
+          <span class="count-badge" id="recipeCount"></span>
+        </div>
+        <label class="search-box standalone">
+          <span>Search recipes</span>
+          <input id="recipeSearch" type="search" placeholder="Recipe, ingredient, effect…" autocomplete="off" />
+        </label>
+        <div class="recipe-list" id="recipeList"></div>
+      </section>
+
+      <section class="view" id="view-planner" data-view="planner">
+        <div class="page-heading">
+          <div>
+            <span class="section-kicker">Brew Planner</span>
+            <h2>Prepare the next session</h2>
+          </div>
+        </div>
+
+        <section class="planner-grid">
+          <div class="panel">
+            <div class="section-heading">
+              <div>
+                <span class="section-kicker">Pinned Ingredients</span>
+                <h3>Priority materials</h3>
+              </div>
+            </div>
+            <div class="compact-list" id="pinnedIngredientList"></div>
+          </div>
+
+          <div class="panel">
+            <div class="section-heading">
+              <div>
+                <span class="section-kicker">Planned Brews</span>
+                <h3>Session queue</h3>
+              </div>
+            </div>
+            <form id="planForm" class="inline-form">
+              <input id="planInput" type="text" maxlength="80" placeholder="Example: Test Frostcap + Cinder Bloom" required />
+              <button class="primary" type="submit">Add</button>
+            </form>
+            <div class="check-list" id="plannedBrewList"></div>
+          </div>
+        </section>
+
+        <section class="panel notes-panel">
+          <div class="section-heading">
+            <div>
+              <span class="section-kicker">Field Notes</span>
+              <h3>Independent research notes</h3>
+            </div>
+            <span class="autosave-label">Autosaves locally</span>
+          </div>
+          <textarea id="researchNotes" rows="10" placeholder="Record theories, market observations, route notes, or unresolved combinations…"></textarea>
+        </section>
+      </section>
+
+      <section class="view" id="view-data" data-view="data">
+        <div class="page-heading">
+          <div>
+            <span class="section-kicker">Data Control</span>
+            <h2>Import, export, and reset</h2>
+          </div>
+        </div>
+
+        <section class="data-grid">
+          <div class="panel data-card">
+            <span class="section-kicker">Alchemy Game → Catalyst</span>
+            <h3>Import discoveries</h3>
+            <p>Copies recognized ingredient and recipe discovery fields into Catalyst. The source file is never changed.</p>
+            <label class="file-button">
+              Choose JSON file
+              <input id="importFile" type="file" accept="application/json,.json" />
+            </label>
+            <p class="fine-print">Supported prototype fields: <code>discoveredIngredients</code>, <code>knownIngredients</code>, <code>knownRecipes</code>, and <code>recipes</code>.</p>
+          </div>
+
+          <div class="panel data-card">
+            <span class="section-kicker">Catalyst Backup</span>
+            <h3>Export workspace</h3>
+            <p>Downloads Catalyst research, notes, favorites, recipes, and planner items as a separate JSON backup.</p>
+            <button class="secondary" id="exportData">Export Catalyst JSON</button>
+          </div>
+
+          <div class="panel data-card danger-card">
+            <span class="section-kicker">Local Reset</span>
+            <h3>Clear Catalyst data</h3>
+            <p>Removes only Catalyst data stored in this browser. It cannot affect Alchemy Game.</p>
+            <button class="danger" id="resetData">Reset Prototype</button>
+          </div>
+        </section>
+
+        <section class="panel import-log-panel">
+          <div class="section-heading">
+            <div>
+              <span class="section-kicker">Import Log</span>
+              <h3>Latest data event</h3>
+            </div>
+          </div>
+          <div id="importLog" class="log-box">No imports have been run.</div>
+        </section>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Primary navigation">
+      <button class="nav-item active" data-target="dashboard" aria-label="Dashboard">
+        <span class="nav-icon">⌂</span><span>Home</span>
+      </button>
+      <button class="nav-item" data-target="codex" aria-label="Ingredient Codex">
+        <span class="nav-icon">◈</span><span>Codex</span>
+      </button>
+      <button class="nav-item" data-target="lab" aria-label="Combination Lab">
+        <span class="nav-icon">⚗</span><span>Lab</span>
+      </button>
+      <button class="nav-item" data-target="notebook" aria-label="Recipe Notebook">
+        <span class="nav-icon">▤</span><span>Recipes</span>
+      </button>
+      <button class="nav-item" data-target="planner" aria-label="Brew Planner">
+        <span class="nav-icon">✓</span><span>Plan</span>
+      </button>
+      <button class="nav-item more-nav" data-target="data" aria-label="Data Control">
+        <span class="nav-icon">⋯</span><span>Data</span>
+      </button>
+    </nav>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <dialog id="ingredientDialog" class="detail-dialog">
+    <button class="dialog-close" id="closeIngredientDialog" aria-label="Close ingredient details">×</button>
+    <div id="ingredientDialogContent"></div>
+  </dialog>
+
+  <dialog id="confirmDialog" class="confirm-dialog">
+    <h3>Reset Catalyst?</h3>
+    <p>This clears the prototype workspace stored in this browser. The Alchemy Game save remains untouched.</p>
+    <div class="dialog-actions">
+      <button class="secondary" id="cancelReset">Cancel</button>
+      <button class="danger" id="confirmReset">Reset Catalyst</button>
+    </div>
+  </dialog>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

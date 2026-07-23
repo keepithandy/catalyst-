@@ -1,0 +1,20 @@
+{
+  "saveVersion": "prototype-example",
+  "discoveredIngredients": [
+    "Cinder Bloom",
+    "Frostcap",
+    "Moon Thistle",
+    "Stormglass",
+    "Deep Pearl"
+  ],
+  "knownRecipes": [
+    {
+      "name": "Stormmind Elixir",
+      "ingredients": ["Stormglass", "Moon Thistle", "Frostcap"]
+    },
+    {
+      "name": "Deep Renewal",
+      "ingredients": ["Deep Pearl", "Bloodberry"]
+    }
+  ]
+}
