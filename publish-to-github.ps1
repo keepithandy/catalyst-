@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [string]$Owner = "keepithandy",
-    [string]$Repository = "catalyst",
+    [string]$Repository = "catalyst-",
     [ValidateSet("private", "public")]
     [string]$Visibility = "private",
     [switch]$CreateRelease

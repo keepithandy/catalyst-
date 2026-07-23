@@ -47,7 +47,7 @@ The ingredient data and scoring model are prototype fixtures. They establish the
 
 ## Automated GitHub publishing
 
-The prototype includes a PowerShell publisher that initializes Git, validates the source, creates `keepithandy/catalyst`, pushes `main`, and configures repository metadata.
+The prototype includes a PowerShell publisher that initializes Git, validates the source, creates `keepithandy/catalyst-`, pushes `main`, and configures repository metadata.
 
 ```powershell
 .\publish-to-github.ps1
