@@ -11,3 +11,4 @@ First working browser prototype.
 - Local storage
 - One-way JSON discovery import
 - Catalyst-only backup export
+- Published baseline: `keepithandy/catalyst-`
